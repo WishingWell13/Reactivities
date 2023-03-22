@@ -1,9 +1,16 @@
+using Application.Activities;
+using Application.Core;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//What is a service class C#?
+//Services are used to fetch information from a data source (most likely a 
+//repository), process the information and return the result to the caller. 
+//https://stackoverflow.com/questions/5015925/correct-use-of-repository-service-classes#:~:text=Services%20are%20used%20to%20fetch,to%20achieve%20the%20wanted%20result.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -20,6 +27,12 @@ builder.Services.AddCors(opt =>
         policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
     });
 });
+
+//Services: tells us which external libraries we use
+//Param is saying where handlers are located
+builder.Services.AddMediatR(typeof(List.Handler));
+//Assembly locates all Mapping Profiles in project
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 //========Middleware======== //Order matters more here
 var app = builder.Build();
