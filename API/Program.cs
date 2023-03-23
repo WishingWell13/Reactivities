@@ -1,3 +1,4 @@
+using API.Extensions;
 using Application.Activities;
 using Application.Core;
 using MediatR;
@@ -13,26 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 //https://stackoverflow.com/questions/5015925/correct-use-of-repository-service-classes#:~:text=Services%20are%20used%20to%20fetch,to%20achieve%20the%20wanted%20result.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(opt => {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddCors(opt => 
-{
-    opt.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
-    });
-});
-
-//Services: tells us which external libraries we use
-//Param is saying where handlers are located
-builder.Services.AddMediatR(typeof(List.Handler));
-//Assembly locates all Mapping Profiles in project
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 //========Middleware======== //Order matters more here
 var app = builder.Build();
